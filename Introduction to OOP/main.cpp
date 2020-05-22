@@ -20,15 +20,15 @@ public:
 	
 	void set_disp(double x, double y) 
 	{
-		double gypoten = sqrt(pow(x, 2) + pow(y, 2));
-		this->disp = gypoten;
+		double disp = sqrt(pow(x, 2) + pow(y, 2));
+		this->disp = disp;
 	}
 	void set_dist(double x, double y, double x1, double y1) 
 	{
 		double k1 = x1 - x;
 		double k2 = y1 - y;
-		double gypoten = sqrt(pow(k1,2)+pow(k2,2));
-		this->dist = gypoten;
+		double dist = sqrt(pow(k1,2)+pow(k2,2));
+		this->dist = dist;
 	}
 };
 
