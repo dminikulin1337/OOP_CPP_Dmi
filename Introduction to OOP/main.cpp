@@ -5,58 +5,56 @@ class Point //Main class with encapsulation
 {
 	double x;
 	double y;
-	
-	double disp;
-	double dist;
 public:
 	double get_x() const { return x; }
 	double get_y() const { return y; }
-	
-	double get_disp() const { return disp; }
-	double get_dist() const { return dist; }
-	
+		
 	void set_x(double x) { this->x = x; }
 	void set_y(double y) { this->y = y; }
-	
-	void set_disp(double x, double y) 
-	{
-		double disp = sqrt(pow(x, 2) + pow(y, 2));
-		this->disp = disp;
+
+	//Constructor
+	Point()
+	{	
+			
 	}
-	void set_dist(double x, double y, double x1, double y1) 
+	//Destructor
+	~Point() 
 	{
-		double k1 = x1 - x;
-		double k2 = y1 - y;
-		double dist = sqrt(pow(k1,2)+pow(k2,2));
-		this->dist = dist;
+		
+	}
+	
+	//Methods:
+	double distance(Point other) 
+	{
+		double x_dist = this->x - other.x;
+		double y_dist = this->y - other.y;
+		double dist = sqrt(x_dist*x_dist+y_dist*y_dist);
+		return dist;
 	}
 };
 
-class Point3D :public Point //Inheritated class frae Point
+double distance(Point A, Point B) 
 {
-	double z;
-public:
-	double get_z() const { return z; }
-	void set_z(double z) { this->z = z; }
-};
+	double x_dist = B.get_x() - A.get_x();
+	double y_dist = B.get_y() - A.get_y();
+	double dist = sqrt(x_dist * x_dist + y_dist * y_dist);
+	return dist;
+}
 
 void main() 
 {
 	Point A;
-	A.set_x(2);
-	A.set_y(3);
-	
-	A.set_disp(100,100);
-	A.set_dist(3,5,8,6);
+	A.set_x(0);
+	A.set_y(0);
 	
 	cout << A.get_x() << "\t" << A.get_y() << endl;
+		
+	Point C;
+	C.set_x(4);
+	C.set_y(3);
+	cout <<"Distance from A to C: "<< A.distance(C) << endl;
+	cout <<"Distance from C to C: " << C.distance(C) << endl;
+	cout << "Distance from C to A: " << C.distance(A) << endl;
 	
-	cout << A.get_disp() << endl;
-	cout << A.get_dist() << endl;
-
-	Point3D B;
-	B.set_x(2);
-	B.set_y(3);
-	B.set_z(4);
-	
+	cout << "Distance from A to C: " << distance(A, C) << endl;
 }
