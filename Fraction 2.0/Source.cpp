@@ -75,7 +75,7 @@ public:
 		}
 		cout << endl;
 	}
-	void toProper(const Fraction&) 
+	Fraction& toProper(const Fraction&) 
 	{
 		if (numerator >= denominator)
 		{
@@ -89,28 +89,28 @@ public:
 				numerator %= denominator;
 			}
 			print();
+			return *this;
 		}
-		else return;
 	}
-	void toImproper(const Fraction&)
+	Fraction& toImproper(const Fraction&)
 	{
 		if (numerator < denominator && integer)
 		{
 			numerator += integer * denominator;
 			integer = 0;
 			print();
+			return *this;
 		}
-		else return;
 	}
-	void reduce(const Fraction&) 
+	Fraction& reduce(const Fraction&) 
 	{
 		if (denominator % numerator == 0)
 		{
 			denominator /= numerator;
 			numerator /= numerator;
 			print();
+			return *this;
 		}
-		else return;
 	}
 };
 
