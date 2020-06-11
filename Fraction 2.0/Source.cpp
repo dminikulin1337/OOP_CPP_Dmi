@@ -17,6 +17,12 @@ public:
 		if (denominator == 0)  denominator = 1;
 		this->denominator = denominator;
 	}
+
+	Fraction operator+(const Fraction&);
+	Fraction operator-(const Fraction&);
+	Fraction operator*(const Fraction&);
+	Fraction operator/(const Fraction&);
+
 	Fraction()//default constructor
 	{
 		this->integer = 0;
@@ -75,50 +81,85 @@ public:
 		}
 		cout << endl;
 	}
-	Fraction& toProper(const Fraction&) 
+	void toProper()
 	{
-		if (numerator >= denominator)
-		{
-			integer += numerator / denominator;
-			if (numerator == denominator) {
-				numerator = 0;
-				denominator = 0;
-			}
-			else 
-			{
-				numerator %= denominator;
-			}
-			print();
-			return *this;
-		}
+		integer += numerator / denominator;
+		numerator %= denominator;
 	}
-	Fraction& toImproper(const Fraction&)
+	void toImproper()
 	{
-		if (numerator < denominator && integer)
-		{
-			numerator += integer * denominator;
-			integer = 0;
-			print();
-			return *this;
-		}
+		numerator += integer * denominator;
+		integer = 0;
 	}
-	Fraction& reduce(const Fraction&) 
+	void reduce() 
 	{
-		if (denominator % numerator == 0)
+		//¬ дроби в любом случае что-то больше. „ислитель может юыть больше знаменател€ или наоборот.
+		int more, less, reminder = 0;
+		//More - большее значение 
+		//Less - меньшее значение
+		//Reminder - остаток от делени€
+		if (numerator > denominator) 
 		{
-			denominator /= numerator;
-			numerator /= numerator;
-			print();
-			return *this;
+			more = numerator;
+			less = denominator;
 		}
+		else 
+		{
+			more = denominator;
+			less = numerator;
+		}
+		do 
+		{
+			reminder = more % less;
+			more = less; //Ѕольшее число становитс€ на место делимого 
+			less = reminder; //ћеньшее число становитс€ на место делител€
+		} while (reminder);
+		int GCD = more; //Greatest Common Divider - наибольший общий делитель
+		numerator /= GCD;
+		denominator /= GCD;
 	}
 };
 
+Fraction Fraction::operator+(const Fraction& other) 
+{
+	this->numerator = numerator * other.denominator + other.numerator * denominator;
+	this->denominator = denominator * other.denominator;
+	return *this;
+}
+Fraction Fraction::operator-(const Fraction& other) 
+{
+	int temp_1num = numerator * other.denominator;
+	int temp_2num = other.numerator * denominator;
+	this->numerator = temp_1num - temp_2num;
+	this->denominator = denominator * other.denominator;
+	return *this;
+}
+Fraction Fraction::operator*(const Fraction& other) 
+{
+	this->numerator = numerator * other.numerator;
+	this->denominator = denominator * other.denominator;
+	return *this;
+}
+Fraction Fraction::operator/(const Fraction& other) 
+{
+	this->numerator = numerator * other.denominator;
+	this->denominator = denominator * other.numerator;
+	return *this;
+}
+
+//#define Testing_constructors
+//#define Testing_methods
+//#define Plus_overloading
+//#define Minus_overloading
+//#define Multiply_overloading
+//#define Division_overloading
+
 void main() 
 {
-	Fraction A=5;
+#ifdef Testing_constructors
+	Fraction A = 5;
 	A.print();
-	Fraction B(5,1,5);
+	Fraction B(5, 1, 5);
 	B.print();
 	Fraction C(4, 8);
 	C.print();
@@ -129,16 +170,59 @@ void main()
 	E.print();
 	Fraction X, Y, Z;
 	X = Y = Z = A;
-	cout << "---------------------------------------------------------------------" << endl;
-	Fraction I(8, 5);
-	I.print();
-	I.toProper(I);
-	cout << "---------------------------------------------------------------------" << endl;
-	Fraction K(6, 2, 5);
-	K.print();
-	K.toImproper(K);
-	cout << "---------------------------------------------------------------------" << endl;
-	Fraction P(1,25,75);
-	P.print();
-	P.reduce(P);
+#endif // Testing_constructors
+
+#ifdef Testing_methods
+	Fraction B(35, 15);
+	B.print();
+	B.toProper();
+	B.print();
+	B.toImproper();
+	B.print();
+	B.reduce();
+	B.print();
+	cout << "------------------------------------------------------------" << endl;
+	Fraction C(251, 934);
+	C.print();
+	C.reduce();
+	C.print();
+#endif // Testing_methods
+
+#ifdef Plus_overloading
+	Fraction A(7, 13);
+	A.print();
+	Fraction B(1, 4);
+	B.print();
+	Fraction C = A + B;
+	C.print();
+#endif // Plus_overloading
+
+#ifdef Minus_overloading
+	Fraction A(7, 13);
+	A.print();
+	Fraction B(1, 4);
+	B.print();
+	Fraction C = A - B;
+	C.print();
+#endif // Minus_overloading
+
+#ifdef Multiply_overloading
+	Fraction A(7, 13);
+	A.print();
+	Fraction B(1, 4);
+	B.print();
+	Fraction C = A * B;
+	C.print();
+#endif // Multiply_overloading
+
+#ifdef Division_overloading
+	Fraction A(7, 13);
+	A.print();
+	Fraction B(1, 4);
+	B.print();
+	Fraction C = A / B;
+	C.print();
+#endif // Division_overloading
+
+
 }
