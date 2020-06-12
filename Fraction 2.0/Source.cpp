@@ -124,6 +124,7 @@ Fraction Fraction::operator+(const Fraction& other)
 {
 	this->numerator = numerator * other.denominator + other.numerator * denominator;
 	this->denominator = denominator * other.denominator;
+	this->integer = integer + other.integer;
 	return *this;
 }
 Fraction Fraction::operator-(const Fraction& other) 
@@ -132,18 +133,28 @@ Fraction Fraction::operator-(const Fraction& other)
 	int temp_2num = other.numerator * denominator;
 	this->numerator = temp_1num - temp_2num;
 	this->denominator = denominator * other.denominator;
+	this->integer = integer - other.integer;
 	return *this;
 }
 Fraction Fraction::operator*(const Fraction& other) 
 {
-	this->numerator = numerator * other.numerator;
+	int temp_num1 = integer * denominator + numerator;
+	int temp_num2 = other.integer * other.denominator + other.numerator;
+	integer = 0;
+	this->numerator = temp_num1*temp_num2;
 	this->denominator = denominator * other.denominator;
+	toProper();
 	return *this;
 }
 Fraction Fraction::operator/(const Fraction& other) 
 {
-	this->numerator = numerator * other.denominator;
-	this->denominator = denominator * other.numerator;
+	int temp_num1 = integer * denominator + numerator;
+	int temp_num2 = other.denominator;
+	int temp_den2 = other.integer * other.denominator + other.numerator;
+	integer = 0;
+	this->numerator = temp_num1 * temp_num2;
+	this->denominator = denominator * temp_den2;
+	toProper();
 	return *this;
 }
 
@@ -191,14 +202,14 @@ void main()
 #ifdef Plus_overloading
 	Fraction A(7, 13);
 	A.print();
-	Fraction B(1, 4);
+	Fraction B(2, 1, 4);
 	B.print();
 	Fraction C = A + B;
 	C.print();
 #endif // Plus_overloading
 
 #ifdef Minus_overloading
-	Fraction A(7, 13);
+	Fraction A(2, 7, 13);
 	A.print();
 	Fraction B(1, 4);
 	B.print();
@@ -207,18 +218,18 @@ void main()
 #endif // Minus_overloading
 
 #ifdef Multiply_overloading
-	Fraction A(7, 13);
+	Fraction A(2, 1, 2);
 	A.print();
-	Fraction B(1, 4);
+	Fraction B(2, 1, 4);
 	B.print();
 	Fraction C = A * B;
 	C.print();
 #endif // Multiply_overloading
 
 #ifdef Division_overloading
-	Fraction A(7, 13);
+	Fraction A(2, 1, 2);
 	A.print();
-	Fraction B(1, 4);
+	Fraction B(2, 1, 4);
 	B.print();
 	Fraction C = A / B;
 	C.print();
