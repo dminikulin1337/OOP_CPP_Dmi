@@ -18,24 +18,19 @@ public:
 		this->denominator = denominator;
 	}
 
-	Fraction operator+(const Fraction&);
-	Fraction operator-(const Fraction&);
-	Fraction operator*(const Fraction&);
-	Fraction operator/(const Fraction&);
-
 	Fraction()//default constructor
 	{
 		this->integer = 0;
 		this->numerator = 0;
 		this->denominator = 1;
 	}
-	Fraction(int integer) 
+	Fraction(int integer) //Single argument constructor
 	{
 		this->integer = integer;
 		this->numerator = 0;
 		this->denominator = 1;
 	}
-	Fraction(int numerator, int denominator) 
+	Fraction(int numerator, int denominator)
 	{
 		this->integer = 0;
 		this->numerator = numerator;
@@ -53,6 +48,10 @@ public:
 		this->numerator = other.numerator;
 		this->denominator = other.denominator;
 	}
+	~Fraction() 
+	{
+
+	}
 	Fraction& operator=(const Fraction& other) 
 	{
 		this->integer = other.integer;
@@ -60,10 +59,63 @@ public:
 		this->denominator = other.denominator;
 		return *this;
 	}
-	~Fraction() 
+	Fraction& operator+=(Fraction other) 
 	{
-
+		this->reduce().toImproper();
+		other.reduce().toImproper();
+		this->numerator = (this->numerator * other.denominator) + (this->denominator * other.numerator);
+		this->denominator *= other.denominator;
+		return this->reduce().toProper();
 	}
+	Fraction& operator-=(Fraction other)
+	{
+		this->reduce().toImproper();
+		other.reduce().toImproper();
+		this->numerator = (this->numerator * other.denominator) - (this->denominator * other.numerator);
+		this->denominator *= other.denominator;
+		return this->reduce().toProper();
+	}
+	Fraction& operator*=(Fraction other) 
+	{
+		this->reduce().toImproper();
+		other.reduce().toImproper();
+		this->numerator *= other.numerator;
+		this->denominator *= other.denominator;
+		return this->reduce().toProper();
+	}
+	Fraction& operator/=(Fraction other) 
+	{
+		this->reduce().toImproper();
+		other.reduce().toImproper();
+		this->numerator *= other.denominator;
+		this->denominator *= other.numerator;
+		return this->reduce().toProper();
+	}
+	/*Fraction operator*(const Fraction& other) const
+	{
+		Fraction res;
+		Fraction left = this->toImproper();
+		Fraction right = other.toImproper();
+		res.numerator = left.numerator * right.numerator;
+		res.denominator = left.denominator * right.denominator;
+		res.reduce();
+		res.toProper();
+		return res;
+	}*/
+	Fraction& operator++()//Prefix
+	{
+		integer++;
+		return *this;
+	}
+	Fraction operator++(int)//Postfix 
+	{
+		Fraction inc = *this;
+		integer++;
+		return inc;
+	}
+
+	//Type-cast operators:
+	operator int() { return integer; }
 
 	void print() const
 	{
@@ -81,18 +133,24 @@ public:
 		}
 		cout << endl;
 	}
-	void toProper()
+	Fraction& toProper()
 	{
 		integer += numerator / denominator;
 		numerator %= denominator;
+		return *this;
 	}
-	void toImproper()
+	Fraction& toImproper() 
 	{
 		numerator += integer * denominator;
 		integer = 0;
+		return *this;
 	}
-	void reduce() 
+	Fraction& reduce() 
 	{
+		if (numerator == 0) { 
+			denominator = 1;
+			return *this; 
+		}
 		//В дроби в любом случае что-то больше. Числитель может юыть больше знаменателя или наоборот.
 		int more, less, reminder = 0;
 		//More - большее значение 
@@ -117,45 +175,106 @@ public:
 		int GCD = more; //Greatest Common Divider - наибольший общий делитель
 		numerator /= GCD;
 		denominator /= GCD;
+		return *this;
 	}
 };
 
-Fraction Fraction::operator+(const Fraction& other) 
+Fraction operator+(Fraction left, Fraction right) 
 {
-	this->numerator = numerator * other.denominator + other.numerator * denominator;
-	this->denominator = denominator * other.denominator;
-	this->integer = integer + other.integer;
-	return *this;
+	return Fraction(
+		left.get_integer() + right.get_integer(),
+		left.get_numerator() * right.get_denominator() + left.get_denominator() * right.get_numerator(),
+		left.get_denominator() * right.get_denominator()
+	).reduce().toProper();
 }
-Fraction Fraction::operator-(const Fraction& other) 
+
+Fraction operator-(Fraction left, Fraction right) 
 {
-	int temp_1num = numerator * other.denominator;
-	int temp_2num = other.numerator * denominator;
-	this->numerator = temp_1num - temp_2num;
-	this->denominator = denominator * other.denominator;
-	this->integer = integer - other.integer;
-	return *this;
+	return Fraction(
+		left.get_integer() - right.get_integer(),
+		left.get_numerator() * right.get_denominator() - left.get_denominator() * right.get_numerator(),
+		left.get_denominator() * right.get_denominator()
+	).reduce().toProper();
 }
-Fraction Fraction::operator*(const Fraction& other) 
+
+Fraction operator*(Fraction left, Fraction right) 
 {
-	int temp_num1 = integer * denominator + numerator;
-	int temp_num2 = other.integer * other.denominator + other.numerator;
-	integer = 0;
-	this->numerator = temp_num1*temp_num2;
-	this->denominator = denominator * other.denominator;
-	toProper();
-	return *this;
+	left.toImproper();
+	right.toProper();
+	return Fraction(left.get_numerator() * right.get_numerator(), left.get_denominator() * right.get_denominator()).reduce().toProper();
 }
-Fraction Fraction::operator/(const Fraction& other) 
+
+Fraction operator/(Fraction left, Fraction right) 
 {
-	int temp_num1 = integer * denominator + numerator;
-	int temp_num2 = other.denominator;
-	int temp_den2 = other.integer * other.denominator + other.numerator;
-	integer = 0;
-	this->numerator = temp_num1 * temp_num2;
-	this->denominator = denominator * temp_den2;
-	toProper();
-	return *this;
+	left.toImproper();
+	right.toImproper();
+	return Fraction(left.get_numerator()*right.get_denominator(), left.get_denominator()*right.get_numerator()).reduce().toProper();
+}
+
+ostream& operator<<(ostream& os, const Fraction& other) 
+{
+	if (other.get_integer()) cout << other.get_integer();
+	if (other.get_numerator())
+	{
+		//if (integer) cout << "(";
+		if (other.get_integer()) cout << "+";
+		cout << other.get_numerator() << "/" << other.get_denominator();
+		//if (integer) cout << ")";
+	}
+	else if (other.get_integer() == 0)
+	{
+		cout << 0;
+	}
+	return os;
+}
+
+bool operator==(Fraction left, Fraction right)
+{
+	left.toImproper();
+	right.toImproper();
+	long double frac1 = (double)left.get_numerator() / (double)left.get_denominator();
+	long double frac2 = (double)right.get_numerator() / (double)right.get_denominator();
+	return(frac1 == frac2) ? true : false;
+}
+bool operator!=(Fraction left, Fraction right) 
+{
+	left.toImproper();
+	right.toImproper();
+	long double frac1 = (double)left.get_numerator() / (double)left.get_denominator();
+	long double frac2 = (double)right.get_numerator() / (double)right.get_denominator();
+	return(frac1 != frac2) ? true : false;
+}
+bool operator>(Fraction left, Fraction right) 
+{
+	left.toImproper();
+	right.toImproper();
+	long double frac1 = (double)left.get_numerator() / (double)left.get_denominator();
+	long double frac2 = (double)right.get_numerator() / (double)right.get_denominator();
+	return(frac1 > frac2) ? true : false;
+}
+bool operator<(Fraction left, Fraction right) 
+{
+	left.toImproper();
+	right.toImproper();
+	long double frac1 = (double)left.get_numerator() / (double)left.get_denominator();
+	long double frac2 = (double)right.get_numerator() / (double)right.get_denominator();
+	return(frac1 < frac2) ? true : false;
+}
+bool operator>=(Fraction left, Fraction right)
+{
+	left.toImproper();
+	right.toImproper();
+	long double frac1 = (double)left.get_numerator() / (double)left.get_denominator();
+	long double frac2 = (double)right.get_numerator() / (double)right.get_denominator();
+	return(frac1 >= frac2) ? true : false;
+}
+bool operator<=(Fraction left, Fraction right)
+{
+	left.toImproper();
+	right.toImproper();
+	long double frac1 = (double)left.get_numerator() / (double)left.get_denominator();
+	long double frac2 = (double)right.get_numerator() / (double)right.get_denominator();
+	return(frac1 <= frac2) ? true : false;
 }
 
 //#define Testing_constructors
@@ -164,6 +283,9 @@ Fraction Fraction::operator/(const Fraction& other)
 //#define Minus_overloading
 //#define Multiply_overloading
 //#define Division_overloading
+//#define Comparison_overloading
+//#define Inc_dec_overloading
+#define Type_change
 
 void main() 
 {
@@ -200,12 +322,13 @@ void main()
 #endif // Testing_methods
 
 #ifdef Plus_overloading
-	Fraction A(7, 13);
+	Fraction A(7, 12);
 	A.print();
 	Fraction B(2, 1, 4);
 	B.print();
 	Fraction C = A + B;
 	C.print();
+	(A += B).print();
 #endif // Plus_overloading
 
 #ifdef Minus_overloading
@@ -215,15 +338,17 @@ void main()
 	B.print();
 	Fraction C = A - B;
 	C.print();
+	(A -= B).print();
 #endif // Minus_overloading
 
 #ifdef Multiply_overloading
-	Fraction A(2, 1, 2);
+	Fraction A(2, 3, 4);
 	A.print();
-	Fraction B(2, 1, 4);
+	Fraction B(5, 7, 8);
 	B.print();
 	Fraction C = A * B;
 	C.print();
+	(A *= B).print();
 #endif // Multiply_overloading
 
 #ifdef Division_overloading
@@ -233,7 +358,44 @@ void main()
 	B.print();
 	Fraction C = A / B;
 	C.print();
+	(A /= B).print();
 #endif // Division_overloading
 
+#ifdef Comparison_overloading
+	Fraction A(2, 2, 4);
+	A.print();
+	Fraction B(2, 1, 4);
+	B.print();
+	if (A != B) { Fraction C = A + B; C.print(); }
+#endif // Comparison_overloading
+
+#ifdef Inc_dec_overloading
+	Fraction A(1, 5, 8);
+	Fraction B = A++;
+	B.print();
+	cout << A << endl;
+	cout << A + B << endl;
+#endif // Inc_dec_overloading
+
+#ifdef Type_change
+	double weight = 3.25;
+	//Explicit change:
+	cout << (int)weight << endl;//C-like cast notation
+	cout << int(weight) << endl;//Functional notation
+
+	int a = 2;
+	cout << a + weight << endl; //Implicit change
+
+	double pi = 3.14;
+	int ci = pi;//conversion from double to int - data loss!!!!!!(no fraction part here)
+	cout << ci << endl;
+
+	double c = 5;
+	int d = c;//From double to int without data loss - Thanks, God!
+	double e = d;//From int to double - no data loss guaranteed!!!
+
+	Fraction A = 5;	//Single argument constructor in work
+	cout << A << endl;
+#endif // Type_change
 
 }
