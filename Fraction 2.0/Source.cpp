@@ -24,19 +24,28 @@ public:
 		this->numerator = 0;
 		this->denominator = 1;
 	}
-	Fraction(int integer) //Single argument constructor
+	explicit Fraction(int integer) //Single argument constructor
 	{
 		this->integer = integer;
 		this->numerator = 0;
 		this->denominator = 1;
 	}
-	Fraction(int numerator, int denominator)
+	explicit Fraction(double decimal)
+	{
+		integer = decimal;
+		decimal -= integer;
+		decimal *= 100000000;
+		numerator = decimal;
+		denominator = 100000000;
+		reduce();
+	}
+	explicit Fraction(int numerator, int denominator)
 	{
 		this->integer = 0;
 		this->numerator = numerator;
 		this->set_denominator(denominator);
 	}
-	Fraction(int integer, int numerator, int denominator)
+	explicit Fraction(int integer, int numerator, int denominator)
 	{
 		this->integer = integer;
 		this->numerator = numerator;
@@ -113,12 +122,26 @@ public:
 		integer++;
 		return inc;
 	}
-
-	//Type-cast operators:
-	operator int() { return integer; }
-
-	void print() const
+	Fraction operator()(int integer, int numerator, int denominator)
 	{
+		set_integer(integer);
+		set_numerator(numerator);
+		set_denominator(denominator);
+		return *this;
+	}
+	//Type-cast operators:
+	explicit operator int()const { return integer; }
+	
+	explicit operator double() const
+	{
+		return integer + (double)numerator / denominator;
+		//1. double/int=double
+		//2. int+double=double
+		//it's revolution, Johny...
+	}
+
+	
+	void print() const{
 		if (integer) cout << integer;
 		if (numerator)
 		{
@@ -394,8 +417,19 @@ void main()
 	int d = c;//From double to int without data loss - Thanks, God!
 	double e = d;//From int to double - no data loss guaranteed!!!
 
-	Fraction A = 5;	//Single argument constructor in work
+	Fraction A = (Fraction)5;	//Single argument constructor in work
 	cout << A << endl;
+
+	Fraction B(2, 1, 2);
+	double b = (double)B;
+	cout << b << endl;
+	int f = (int)B;
+	cout << f << endl;
+
+	Fraction C(3.14);//Explicit constructor has to be used like this
+	cout << C << endl;
+	C(2, 7, 8);//instead of using set_() methods
+	cout << C << endl;
 #endif // Type_change
 
 }
