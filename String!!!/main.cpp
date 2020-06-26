@@ -20,28 +20,20 @@ public:
 	void set_size(int size) { this->size = size; }
 	void set_str(char* str) { this->str = str; }
 
-	explicit String(int size = 80)
+	explicit String(int size = 80) : size(size), str(new char[size] {})
 	{
-		this->size = size;
-		this->str = new char[size] {};
+		
 	}
-	String(const char str[])//constructor
+	String(const char str[]) :String(strlen(str)+1)//constructor
 	{
-		this->size = strlen(str) + 1;
-		this->str = new char[size] {};
 		for (int i = 0; str[i]; i++)
 		{
 			this->str[i] = str[i];
 		}
 	}
-	String(const String& other)//copy constructor
+	String(const String& other):String(other.str)//copy constructor
 	{
-		this->size = other.size;
-		this->str = new char[size] {};
-		for (int i = 0; i < size; i++)
-		{
-			this->str[i] = other.str[i];
-		}
+		
 	}
 	String(String&& other)
 	{
