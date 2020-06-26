@@ -20,33 +20,26 @@ public:
 	void set_size(int size) { this->size = size; }
 	void set_str(char* str) { this->str = str; }
 
-	explicit String(int size = 80)
+	explicit String(int size = 80) :size(size), str(new char[size] {})//Initializer list
 	{
-		this->size = size;
-		this->str = new char[size] {};
+		
 	}
-	String(const char str[])//constructor
+	String(const char str[]) :size(strlen(str) + 1), str(new char[size] {})//constructor
 	{
-		this->size = strlen(str) + 1;
-		this->str = new char[size] {};
 		for (int i = 0; str[i]; i++)
 		{
 			this->str[i] = str[i];
 		}
 	}
-	String(const String& other)//copy constructor
+	String(const String& other) :size(other.size), str(new char[size] {})//copy constructor
 	{
-		this->size = other.size;
-		this->str = new char[size] {};
 		for (int i = 0; i < size; i++)
 		{
 			this->str[i] = other.str[i];
 		}
 	}
-	String(String&& other)
+	String(String&& other) :size(other.size), str(other.str)
 	{
-		this->size = other.size;
-		this->str = other.str;
 		other.str = nullptr;
 		cout << "Move constructor in work: " << this << endl;
 	}
@@ -55,7 +48,7 @@ public:
 		delete[] str;
 	}
 
-	String& operator=(const String& other)
+	String& operator=(const String& other)	
 	{
 		if (this == &other) { return *this; }
 		delete[] this->str;
