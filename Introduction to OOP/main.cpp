@@ -1,71 +1,8 @@
-#include<iostream>
-using namespace std;
+#include"Point.h"
 
 //#define May_25
 //#define DefaultConstructors
 #define CopyConstructors
-
-class Point {
-	double x;
-	double y;
-public:
-	double get_x() const { return x; }
-	double get_y() const { return y; }
-		
-	void set_x(double x) { this->x = x; }
-	void set_y(double y) { this->y = y; }
-
-	//Point() //default constructor
-	//{	
-	//	x = y = double();
-	//}
-	//Point(double x) //Single argument constructor
-	//{
-	//	this->x = x;
-	//	this->y = double();
-	//}
-
-	Point(double x=0, double y=0) //just constructor
-	{
-		this->x = x;
-		this->y = y;
-	}
-	Point(const Point& other) 
-	{
-		this->x = other.x;
-		this->y = other.y;
-	}
-	void operator=(const Point& other)
-	{
-		this->x = other.x;
-		this->y = other.y;
-	}
-	~Point() 
-	{
-		
-	}
-	
-	//Methods:
-	double distance(Point other) 
-	{
-		double x_dist = this->x - other.x;
-		double y_dist = this->y - other.y;
-		double dist = sqrt(x_dist*x_dist+y_dist*y_dist);
-		return dist;
-	}
-	void print() const 
-	{
-		cout << "X=" << x << ", Y=" << y << endl;
-	}
-};
-
-double distance(Point A,	Point B) 
-{
-	double x_dist = B.get_x() - A.get_x();
-	double y_dist = B.get_y() - A.get_y();
-	double dist = sqrt(x_dist * x_dist + y_dist * y_dist);
-	return dist;
-}
 
 void main() 
 {
