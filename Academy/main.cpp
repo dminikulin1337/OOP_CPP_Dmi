@@ -6,146 +6,167 @@ class Human
 {
 	string name;
 	string surname;
-	int age;
-	string gender;
+	unsigned int age;
 public:
-	const string& get_name() const { return this->name; }
-	const string& get_surname() const { return this->surname; }
-	int get_age() const { return age; }
-	const string& get_gender() { return this->gender; }
+	const string& get_name() const { return name; }
+	const string& get_surname() const { return surname; }
+	unsigned int get_age() const { return age; }
 
-	int set_age(int age)
+	string& set_name(const string& name) { return this->name = name; }
+	string& set_surname(const string& surname) { return this->surname = surname; }
+	unsigned int set_age(unsigned int age) { return this->age = age; }
+
+	Human(const string& name, const string& surname, unsigned int age)
 	{
-		if (age < 0) { age = -age; }
-		return this->age = age;
-	}
-	Human(const string& name, const string& surname, int age, const string& gender) :
-		name(name),
-		surname(surname),
-		age(set_age(age)),
-		gender(gender)
-	{
-		/*cout << "H___constructor: " << this << endl;*/
+		set_name(name);
+		set_surname(surname);
+		set_age(age);
 	}
 	~Human()
 	{
-		/*cout << "H___destructor: " << this << endl;*/
+		
 	}
 	void print()const
 	{
-		cout << "Name: " << name << endl;
-		cout << "Surname: " << surname << endl;
-		cout << "Age: " << age << endl;
-		cout << "Gender: " << gender << endl;
+		cout << name << " " << surname << " " << age << " год.\n";
 	}
 };
 
 class Student :public Human
 {
 	string group;
-	int rating;
-	int attendance;
-	string speciality;
+	unsigned int rating;
+	unsigned int attendance;
 public:
-	const string& get_group() const { return this->group; }
-	int get_rating()const { return rating; }
-	int get_attendance()const { return attendance; }
-	const string& get_speciality()const { return this->speciality; }
+	const string& get_group()const { return group; }
+	unsigned int get_rating()const { return rating; }
+	unsigned int get_attendance()const { return attendance; }
 
-	int set_rating(int rating)
+	string& set_group(const string& group) { return this->group = group; }
+	unsigned int set_rating(unsigned int rating) { return this->rating = rating; }
+	unsigned int set_attedance(unsigned int attendance) { return this->attendance = attendance; }
+
+	Student(const string& name, const string& surname, unsigned int age,
+		const string& group, unsigned int rating, unsigned int attendance
+	) :Human(name, surname, age)
 	{
-		if (rating == 0) { rating = 1; }
-		if (rating < 0) { rating = -rating; }
-		return this->rating = rating;
+		set_group(group);
+		set_rating(rating);
+		set_attedance(attendance);
 	}
-	int set_attendance(int attendance)
+	~Student() 
 	{
-		if (attendance < 0) { attendance = -attendance; }
-		if (attendance > 100 || (attendance > 100 && attendance < 0)) { attendance = 100; }
-		return this->attendance = attendance;
+		
 	}
-	Student(const string& name, const string& surname, int age, const string& gender,
-		const string& group, int rating, int attendance, const string& speciality) :
-		Human(name, surname, age, gender) 
-	{
-		this->group = group;
-		this->rating = set_rating(rating);
-		this->attendance = set_attendance(attendance);
-		this->speciality = speciality;
-		/*cout << "S____constructor: " << this << endl;*/
-	}
-	~Student()
-	{
-		/*cout << "S___destructor: " << this << endl;*/
-	}
-	void print() const
+	void print() const 
 	{
 		Human::print();
-		cout << "Group: " << group << endl;
-		cout << "Place in rating: " << rating << endl;
-		cout << "Attendance: " << attendance << endl;
-		cout << "Speciality: " << speciality << endl;
+		cout << group << " Рейтинг: " << rating << " Посещаемость: " << attendance << "\n";
 	}
 };
 
 class Teacher :public Human 
 {
-	string subject;
-	string experience;
-	string specialiti;
-	bool kindness;
+	string spec;
+	unsigned int exp;
 public:
-	const string& get_subject() const { return this->subject; }
-	const string& get_experiexnce() const { return this->experience; }
-	const string& get_specialiti() const { return this->specialiti; }
-	bool get_kindness() const { return this->kindness; }
+	const string& get_spec()const { return spec; }
+	unsigned int get_exp()const { return exp; }
 
-	Teacher(const string& name, const string& surname, int age, const string& gender,
-		const string& subject, const string& experience, const string& specialiti, bool kindness) :
-		Human(name, surname, age, gender) 
-	{
-		this->subject = subject;
-		this->experience = experience;
-		this->specialiti = specialiti;
-		this->kindness = kindness;
-		/*cout << "T___constructor: " << this << endl;*/
-	}
-	~Teacher()
-	{
-		/*cout << "T___destructor: " << this << endl;*/
-	}
+	string& set_spec(const string& spec) { return this->spec = spec; }
+	unsigned int set_exp(unsigned int exp) { return this->exp = exp; }
 
-	void print() const 
+	Teacher(const string& name, const string& surname, unsigned int age,
+		const string& spec, unsigned int exp
+	) :Human(name, surname, age) 
+	{
+		set_spec(spec);
+		set_exp(exp);
+	}
+	~Teacher() 
+	{
+
+	}
+	void print() const
 	{
 		Human::print();
-		cout << "Subject: " << subject << endl;
-		cout << "Experience: " << experience << endl;
-		cout << "Speciality: " << specialiti << endl;
-		cout << "Is this teacher kind? " << (kindness ? "Yes" : "No") << endl;
+		cout << "Специальность: " << spec << " Опыт работы: " << exp << "\n";
+	}
+};
+
+class Graduate :public Student
+{
+	string topic;
+public:
+	const string& get_topic() const { return topic; }
+	string& set_topic(const string& topic) { return this->topic = topic; }
+
+	Graduate(const string& name, const string& surname, unsigned int age,
+		const string& group, unsigned int rating, unsigned int attendance,
+		const string& topic):Student(name, surname, age, group, rating, attendance)
+	{
+		set_topic(topic);
+	}
+	Graduate(const Student& BP, const string& topic):Student(BP)
+	{
+		set_topic(topic);
+	}
+	~Graduate()
+	{
+
+	}
+	void print()const 
+	{
+		Student::print();
+		cout << "Тема работы: " << topic << "\n";
 	}
 };
 
 //#define HUMAN
-#define STUDENT
-#define TEACHER
+//#define STUDENT
+//#define TEACHER
+//#define GRADUATE
+#define ARRAY_OMG
 
 void main()
 {
+	setlocale(LC_ALL, "");
 #ifdef HUMAN
-	Human D("Andrii", "Poltava", 35, "Male");
+	Human D("TТ", "Абвгдеёж", 35);
 	D.print();
 #endif // HUMAN
 
-	cout << "\n <<<---------------------------------------------------------------------------------------------------------->>>\n" << endl;
+	//cout << "\n <<<---------------------------------------------------------------------------------------------------------->>>\n" << endl;
 #ifdef STUDENT
-	Student BP("Dmytro", "Nikulin", 16, "Male", "PV911", 3, 92, "Software development");
-	BP.print();
+	Student BP("Вячеслав", "Мясников", 36, "PV911", 3, 90);
+	//BP.print();
 #endif // STUDENT
 
-	cout << "\n <<<---------------------------------------------------------------------------------------------------------->>>\n" << endl;
 #ifdef TEACHER
-	Teacher EM("Andrii", "Kobylinsliy", 40, "Male", "Hardware/Windows configuration", "20 years", "System administrator", true);
+	Teacher EM("Александр", "Попов", 40, "Пишет юмористические номера", 20);
 	EM.print();
 #endif // TEACHER
 
+#ifdef GRADUATE
+	cout << "\n <<<---------------------------------------------------------------------------------------------------------->>>\n" << endl;
+	Graduate DS("Маркус", "Хэлоуей", 24, "DedSec", 1, 0, "Почему ctOS неэффективна?");
+	DS.print();
+	cout << "\n <<<---------------------------------------------------------------------------------------------------------->>>\n" << endl;
+	Graduate VS(BP, "Глубинный смысл песен Уральских Пельменей");
+	VS.print();
+#endif // GRADUATE
+
+	Human group[] =
+	{
+		Student("Sitara", "Dhavan", 27, "DedSec", 3, 100),
+		Student("Wrench", "", 20, "DedSec", 2, 100),
+		Teacher("Trey", "Stelmann", 40, "Cyber Security", 20),
+		Student("Josh", "Sauchak", 21, "DedSec", 4, 100),
+		Teacher("Jason", "Texas", 40, "Hardware PC", 20),
+		Graduate("Marcus", "Holloway", 24, "DedSec", 1, 0, "Why ctOS is failed?")
+	};
+	for (int i = 0; i < sizeof(group) / sizeof(Human); i++)
+	{
+		group[i].print();
+	}
 }
