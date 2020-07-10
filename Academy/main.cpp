@@ -22,13 +22,13 @@ public:
 		set_surname(surname);
 		set_age(age);
 	}
-	~Human()
+	virtual ~Human()
 	{
 		
 	}
-	void print()const
+	virtual void print()const
 	{
-		cout << name << " " << surname << " " << age << " год.\n";
+		cout << name << " " << surname << " " << age << " years.\n";
 	}
 };
 
@@ -126,8 +126,7 @@ public:
 //#define STUDENT
 //#define TEACHER
 //#define GRADUATE
-#define ARRAY_OMG
-
+#define POLYMORPH
 void main()
 {
 	setlocale(LC_ALL, "");
@@ -156,17 +155,24 @@ void main()
 	VS.print();
 #endif // GRADUATE
 
-	Human group[] =
+#ifdef POLYMORPH
+	Human* group[] =
 	{
-		Student("Sitara", "Dhavan", 27, "DedSec", 3, 100),
-		Student("Wrench", "", 20, "DedSec", 2, 100),
-		Teacher("Trey", "Stelmann", 40, "Cyber Security", 20),
-		Student("Josh", "Sauchak", 21, "DedSec", 4, 100),
-		Teacher("Jason", "Texas", 40, "Hardware PC", 20),
-		Graduate("Marcus", "Holloway", 24, "DedSec", 1, 0, "Why ctOS is failed?")
+		new Student("Sitara", "Dhavan", 27, "DedSec", 3, 100),
+		new Student("Wrench", "", 20, "DedSec", 2, 100),
+		new Teacher("Trey", "Stelmann", 40, "Cyber Security", 20),
+		new Student("Josh", "Sauchak", 21, "DedSec", 4, 100),
+		new Teacher("Jason", "Texas", 40, "Hardware PC", 20),
+		new Graduate("Marcus", "Holloway", 24, "DedSec", 1, 0, "Why ctOS is failed?")
 	};
-	for (int i = 0; i < sizeof(group) / sizeof(Human); i++)
+	for (int i = 0; i < size(group); i++)
 	{
-		group[i].print();
+		group[i]->print();
 	}
+	for (int i = 0; i < size(group); i++)
+	{
+		delete group[i];
+	}
+#endif // POLYMORPH
+
 }

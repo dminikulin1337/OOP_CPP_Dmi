@@ -420,7 +420,7 @@ void main()
 	Fraction A = (Fraction)5;	//Single argument constructor in work
 	cout << A << endl;
 
-	Fraction B(2, 1, 2);
+	Fraction B(-2, 1, 2);
 	double b = (double)B;
 	cout << b << endl;
 	int f = (int)B;
