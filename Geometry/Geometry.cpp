@@ -168,7 +168,9 @@ int main()
 
 	try
 	{
-		Geometry::Triangle trgl(6, 7, 10);
+		Geometry::Triangle trgl(6, 7, 7);
+		cout << "Площадь треугольника: " << trgl.area() << endl;
+		cout << "Периметр треугольника: " << trgl.perimeter() << endl;
 	}
 	catch (const std::exception& e)
 	{
