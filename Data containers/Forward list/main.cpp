@@ -1,4 +1,5 @@
 #include<iostream>
+#include<exception>
 #include<string>
 using namespace std;
 
@@ -22,7 +23,7 @@ class ForwardList
 {
 	Element* head;
 public:
-	ForwardList():head(nullptr)
+	ForwardList() :head(nullptr)
 	{
 		cout << "L_Constructor: " << this << endl;
 	}
@@ -52,11 +53,44 @@ public:
 		}
 		Tempo->pNext = New;
 	}
+	void Insert(int data, int index, int size)
+	{
+		if (head == nullptr)
+		{
+			PushFront(data);
+			return;
+		}
+		if (index >= size) { throw exception("Index is bigger than / equal to size of list"); }
+		Element* New = new Element(data);
+		Element* Tempo = head;
+		while (Tempo->pNext)
+		{
+			Tempo = Tempo->pNext;
+			
+		}
+		Tempo->pNext = New;
+		
+	}
+	void PopFront()
+	{
+		if (head == nullptr) { return; }
+		head = head->pNext;
+	}
+	/*void PopBack()
+	{
+		if (head == nullptr) { return; }
+		Element* Tempo = head;
+		while (Tempo->pNext)
+		{
+			Tempo = Tempo->pNext;
+		}
+		cout << Tempo << endl;
+	}*/
 	void print() const
 	{
 		Element* Tempo = head; //Итератор
 		while (Tempo!=nullptr)
-		{
+		{	
 			cout << Tempo << " " << Tempo->data << " " << Tempo->pNext << endl;
 			Tempo = Tempo->pNext; // Переход на следующий елемент
 		}
@@ -73,7 +107,15 @@ int main()
 	{
 		list.PushBack(rand()%100);
 	}
-	//list.PopFront();
+	//list.PopBack();
+	try
+	{
+		list.Insert(100, 5, size);
+	}
+	catch(const exception& e)
+	{
+		cerr << e.what() << endl;
+	}
 	list.print();
 	return 0;
 }
