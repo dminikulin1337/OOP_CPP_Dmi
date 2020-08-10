@@ -31,10 +31,46 @@ class ForwardList
 	Element* head;
 	int size;
 public:
+	Element* get_head() const { return head; }
+	int get_size() const { return size; }
+
+	Element* set_head (Element* head) { return this->head = head; }
+	int set_size (int size)
+	{
+		if (size < 0) { size = -size; }
+		return this->size = size;
+	}
 	ForwardList() :head(nullptr)
 	{
 		size = 0;
 		//cout << "L_Constructor: " << this << endl;
+	}
+	ForwardList(const ForwardList& other)
+	{
+		this->head = other.head;
+		this->size = other.size;
+		//cout << "L_Constructor: " << this << endl;
+	}
+	ForwardList(ForwardList&& other) 
+	{
+		this->head = other.head;
+		this->size = other.size;
+		other.head = nullptr;
+		cout << "Move" << endl;
+	}
+	ForwardList& operator=(const ForwardList& other)
+	{
+		this->head = other.head;
+		this->size = other.size;
+		return *this;
+	}
+	ForwardList& operator=(ForwardList&& other)
+	{
+		this->head = other.head;
+		this->size = other.size;
+		other.head = nullptr;
+		cout << "Move" << endl;
+		return *this;
 	}
 	~ForwardList()
 	{
@@ -104,14 +140,15 @@ public:
 		Tempo->pNext = nullptr;
 		size--;
 	}
-	/*void Erase(int index)
+	void Erase(int index)
 	{
 		Element* Tempo = head;
 		for (int i = 0; i < index - 1; i++)
 		{
-
+			Tempo = Tempo->pNext;
 		}
-	}*/
+		Tempo->pNext = Tempo->pNext->pNext;
+	}
 	//other methods
 	void print() const
 	{
@@ -132,6 +169,7 @@ public:
 };
 
 //#define CHECK
+//#define Check2
 
 int main()
 {
@@ -154,12 +192,13 @@ int main()
 	list.Insert(value, index);
 	cout << delimeter << endl;
 	list.print();
-#endif // CHE
+#endif // CHECK
 
+#ifdef Check2
 	ForwardList list1;
 	list1.PushBack(3);
 	list1.PushBack(3);
-	list1.PushBack(3);
+	list1.PushBack(0);
 	list1.PushBack(3);
 	list1.PushBack(3);
 	list1.print();
@@ -167,10 +206,25 @@ int main()
 	cout << delimeter << endl;
 
 	ForwardList list2;
-	list2.PushFront(13); 
-	list2.PushFront(26); 
+	list2.PushFront(13);
+	list2.PushFront(26);
 	list2.PushFront(39);
 	list2.print();
+
+	cout << delimeter << endl;
+
+	list1 = list2;
+	list1.print();
+
+	cout << delimeter << endl;
+
+	ForwardList list3 = list1;
+	list3.print();
+
+	cout << delimeter << endl;
+	list3.Erase(1);
+	list3.print();
+#endif // Check2
 
 	return 0;
 }
