@@ -45,38 +45,57 @@ public:
 		size = 0;
 		//cout << "L_Constructor: " << this << endl;
 	}
+	ForwardList(int nullz):ForwardList()
+	{
+		while (nullz--) { PushFront(0); }
+	}
 	ForwardList(const ForwardList& other)
 	{
-		this->head = other.head;
-		this->size = other.size;
-		//cout << "L_Constructor: " << this << endl;
+		this->head = nullptr;
+		this->size = 0;
+		for (Element* Temp = other.head; Temp; Temp = Temp->pNext)
+		{
+			PushBack(Temp->data);
+		}
+		//cout << "L_copyConstructor: " << this << endl;
 	}
-	ForwardList(ForwardList&& other) 
+	/*ForwardList(ForwardList&& other) 
 	{
 		this->head = other.head;
 		this->size = other.size;
 		other.head = nullptr;
 		cout << "Move" << endl;
-	}
+	}*/
 	ForwardList& operator=(const ForwardList& other)
 	{
 		this->head = other.head;
 		this->size = other.size;
 		return *this;
 	}
-	ForwardList& operator=(ForwardList&& other)
+	/*ForwardList& operator=(ForwardList&& other)
 	{
 		this->head = other.head;
 		this->size = other.size;
 		other.head = nullptr;
 		cout << "Move" << endl;
 		return *this;
-	}
+	}*/
 	~ForwardList()
 	{
-		size--;
+		while (head != nullptr) PopFront();
 		//cout << "L_Destructor: " << this << endl;
 	}
+
+	//Operators
+	int& operator[](int index)
+	{
+		Element* Temp = head;
+		for (int i = 0; i < index; i++)
+		{
+			Temp = Temp->pNext;
+		}
+		return Temp->data;
+}
 
 	//adding elements
 	void PushFront(int data)
@@ -170,11 +189,13 @@ public:
 
 //#define CHECK
 //#define Check2
+#define Cointreau
 
 int main()
 {
-	setlocale(LC_ALL, "");
 
+	int n;
+	cout << "Enter size of list: "; cin >> n;
 #ifdef CHECK
 	int size;
 	cout << "Input list size: "; cin >> size;
@@ -205,7 +226,7 @@ int main()
 
 	cout << delimeter << endl;
 
-	ForwardList list2;
+	/*ForwardList list2;
 	list2.PushFront(13);
 	list2.PushFront(26);
 	list2.PushFront(39);
@@ -216,15 +237,28 @@ int main()
 	list1 = list2;
 	list1.print();
 
-	cout << delimeter << endl;
+	cout << delimeter << endl;*/
 
 	ForwardList list3 = list1;
 	list3.print();
 
-	cout << delimeter << endl;
+	/*cout << delimeter << endl;
 	list3.Erase(1);
-	list3.print();
+	list3.print();*/
 #endif // Check2
+
+#ifdef Cointreau
+
+	ForwardList list(n);
+	list.print();
+
+	for (int i = 0; i < n; i++)
+	{
+		list[i] = rand() % 100;
+		cout << list[i] << "\t";
+	}
+
+#endif // UniqueConstreau
 
 	return 0;
 }
