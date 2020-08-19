@@ -47,6 +47,8 @@ public:
 	}
 	ForwardList(int nullz):ForwardList()
 	{
+		if (nullz < 0) { throw exception("Negative size inputed."); }
+		if (nullz > 1000) { throw exception("Too high size. Max. acceptable size is 1000 elements."); }
 		while (nullz--) { PushFront(0); }
 	}
 	ForwardList(const ForwardList& other)
@@ -248,16 +250,20 @@ int main()
 #endif // Check2
 
 #ifdef Cointreau
+	try {
+		ForwardList list(n);
+		list.print();
 
-	ForwardList list(n);
-	list.print();
-
-	for (int i = 0; i < n; i++)
-	{
-		list[i] = rand() % 100;
-		cout << list[i] << "\t";
+		for (int i = 0; i < n; i++)
+		{
+			list[i] = rand() % 100;
+			cout << list[i] << "\t";
+		}
 	}
-
+	catch (const exception& e)
+	{
+		cerr << e.what() << endl;
+	}
 #endif // UniqueConstreau
 
 	return 0;
