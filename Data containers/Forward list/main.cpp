@@ -1,7 +1,11 @@
 #include<iostream>
 #include<exception>
 #include<string>
-using namespace std;
+using std::cout;
+using std::cin;
+using std::cerr;
+using std::endl;
+using std::exception;
 
 #define delimeter "\n<================================================================>\n"
 
@@ -32,7 +36,7 @@ class ForwardList
 	int size;
 public:
 	Element* get_head() const { return head; }
-	int get_size() const { return size; }
+	int get_size() const { return this->size; }
 
 	Element* set_head (Element* head) { return this->head = head; }
 	int set_size (int size)
@@ -45,13 +49,28 @@ public:
 		size = 0;
 		//cout << "L_Constructor: " << this << endl;
 	}
-	ForwardList(int nullz):ForwardList()
+	ForwardList(int nullz) :ForwardList()
 	{
 		if (nullz < 0) { throw exception("Negative size inputed."); }
-		if (nullz > 1000) { throw exception("Too high size. Max. acceptable size is 1000 elements."); }
+		//if (nullz > 1000) { throw exception("Too high size. Max. acceptable size is 1000 elements."); }
 		while (nullz--) { PushFront(0); }
 	}
-	ForwardList(const ForwardList& other)
+	ForwardList(const ForwardList& other) :ForwardList()
+	{
+		for (Element* Temp = other.head; Temp; Temp = Temp->pNext)
+		{
+			PushBack(Temp->data);
+		}
+		//cout << "L_copyConstructor: " << this << endl;
+	}
+	ForwardList(const std::initializer_list<int>& il)
+	{
+		for (const int* it = il.begin(); it != il.end(); it++)
+		{
+			PushBack(*it);
+		}
+	}
+	ForwardList& operator=(const ForwardList& other)
 	{
 		this->head = nullptr;
 		this->size = 0;
@@ -59,29 +78,8 @@ public:
 		{
 			PushBack(Temp->data);
 		}
-		//cout << "L_copyConstructor: " << this << endl;
-	}
-	/*ForwardList(ForwardList&& other) 
-	{
-		this->head = other.head;
-		this->size = other.size;
-		other.head = nullptr;
-		cout << "Move" << endl;
-	}*/
-	ForwardList& operator=(const ForwardList& other)
-	{
-		this->head = other.head;
-		this->size = other.size;
 		return *this;
 	}
-	/*ForwardList& operator=(ForwardList&& other)
-	{
-		this->head = other.head;
-		this->size = other.size;
-		other.head = nullptr;
-		cout << "Move" << endl;
-		return *this;
-	}*/
 	~ForwardList()
 	{
 		while (head != nullptr) PopFront();
@@ -91,13 +89,14 @@ public:
 	//Operators
 	int& operator[](int index)
 	{
+		if (index >= this->size) { throw exception("\nError: Out of range."); }
 		Element* Temp = head;
 		for (int i = 0; i < index; i++)
 		{
 			Temp = Temp->pNext;
 		}
 		return Temp->data;
-}
+	}
 
 	//adding elements
 	void PushFront(int data)
@@ -191,13 +190,13 @@ public:
 
 //#define CHECK
 //#define Check2
-#define Cointreau
+//#define Cointreau
 
 int main()
 {
 
-	int n;
-	cout << "Enter size of list: "; cin >> n;
+	/*int n;
+	cout << "Enter size of list: "; cin >> n;*/
 #ifdef CHECK
 	int size;
 	cout << "Input list size: "; cin >> size;
@@ -252,13 +251,18 @@ int main()
 #ifdef Cointreau
 	try {
 		ForwardList list(n);
-		list.print();
+		//list.print();
 
-		for (int i = 0; i < n; i++)
+		for (int i = 0; i < list.get_size(); i++)
 		{
 			list[i] = rand() % 100;
+		}
+		cout << "List loaded" << endl;
+		for (int i = 0; i < list.get_size(); i++)
+		{
 			cout << list[i] << "\t";
 		}
+		cout << "List printed" << endl;
 	}
 	catch (const exception& e)
 	{
@@ -266,5 +270,7 @@ int main()
 	}
 #endif // UniqueConstreau
 
+	ForwardList list = { 3, 5, 8, 13, 21 };
+	list.print();
 	return 0;
 }
