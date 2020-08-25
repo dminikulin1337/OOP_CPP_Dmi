@@ -26,9 +26,48 @@ public:
 		//cout << "E_Destructor: " << this << endl;
 	}
 	friend class ForwardList;//ForwardList - мой друг, он меня и мои данные может видеть
+	friend class Iterator;
 };
 
 int Element::count = 0;
+
+class Iterator
+{
+	Element* Temp;
+public:
+	Iterator(Element* Temp = nullptr)
+	{
+		this->Temp = Temp;
+		//cout << "ItConstructor: " << this << endl;
+	}
+	~Iterator()
+	{
+		//cout << "ItDestructor: " << this << endl;
+	}
+	Iterator& operator++()
+	{
+		Temp = Temp->pNext;
+		return *this;
+	}
+	Iterator operator++(int)
+	{
+		Iterator old = *this;
+		Temp = Temp->pNext;
+		return old;
+	}//WTF definition
+	int& operator*()
+	{
+		return Temp->data;
+	}
+	bool operator!=(Element* other_el) const
+	{
+		return this->Temp != other_el; 
+	}
+	operator bool()const
+	{
+		return Temp;
+	}
+};
 
 class ForwardList
 {
@@ -38,17 +77,21 @@ public:
 	Element* get_head() const { return head; }
 	int get_size() const { return this->size; }
 
-	Element* set_head (Element* head) { return this->head = head; }
-	int set_size (int size)
+	Iterator begin()const
 	{
-		if (size < 0) { size = -size; }
-		return this->size = size;
+		return head;
 	}
+	Iterator end()const
+	{
+		return nullptr;
+	}
+
 	ForwardList() :head(nullptr)
 	{
 		size = 0;
 		//cout << "L_Constructor: " << this << endl;
 	}
+
 	ForwardList(int nullz) :ForwardList()
 	{
 		if (nullz < 0) { throw exception("Negative size inputed."); }
@@ -180,9 +223,10 @@ public:
 			Tempo = Tempo->pNext; // Переход на следующий елемент
 		}
 #endif // AULD
-		for (Element* Temp = head; Temp; Temp = Temp->pNext)
+		for (Iterator Temp = begin(); Temp != end(); Temp++)
 		{
-			cout << Temp << " " << Temp->data << " " << Temp->pNext << endl;
+			//cout << Temp << " " << Temp->data << " " << Temp->pNext << endl;
+			cout << *Temp << endl;
 		}
 		cout << "List size: " << size << endl;
 	}
@@ -272,5 +316,11 @@ int main()
 
 	ForwardList list = { 3, 5, 8, 13, 21 };
 	list.print();
+	for (int i : list)
+	{
+		cout << i << "\t";
+	}
+	cout << endl;
+	
 	return 0;
 }
