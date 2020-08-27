@@ -5,8 +5,9 @@ class Element
 {
 	int data;
 	Element* pNext;
+	Element* pPrev;
 public:
-	Element(int data, Element* pNext = nullptr): data(data), pNext(pNext)
+	Element(int data, Element* pNext = nullptr): data(data), pNext(pNext), pPrev(pPrev)
 	{
 		cout << "E_Construtor: " << this << endl;
 	}
@@ -29,21 +30,7 @@ public:
 	}
 	~DoubleList()
 	{
-		while (head != nullptr) { PopFront(); }
 		cout << "L_Destructor: " << this << endl;
-	}
-
-	void PushFront(int data)
-	{
-		head = new Element(data, head);
-		size++;
-	}
-	void PopFront()
-	{
-		Element* kill = head;
-		head = head->pNext;
-		delete kill;
-		size--;
 	}
 	void print() const
 	{
@@ -58,8 +45,5 @@ public:
 int main()
 {
 	DoubleList list;
-	//list.print();
-	list.PushFront(6);
-	list.print();
 	return 0;
 }
