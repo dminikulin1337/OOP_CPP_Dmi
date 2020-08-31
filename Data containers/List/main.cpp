@@ -16,11 +16,11 @@ class List
 			pNext(pNext),
 			pPrev(pPrev)
 		{
-			cout << "E_Constructor " << this << endl;
+			//cout << "E_Constructor " << this << endl;
 		}
 		~Element()
 		{
-			cout << "E_Destructor " << this << endl;
+			//cout << "E_Destructor " << this << endl;
 		}
 		friend class List;
 	};
@@ -34,10 +34,71 @@ public:
 		size = 0;
 		cout << "L_Constructor " << this << endl;
 	}
+	List(const List& other) :List()
+	{
+		this->size = other.size;
+		for (Element* Temp = other.head; Temp != nullptr; Temp = Temp->pNext)
+		{
+			PushBack(Temp->data);
+		}
+	}
+	List(List&& other) :List()
+	{
+		this->size = other.size;
+		for (Element* Temp = other.head; Temp != nullptr; Temp = Temp->pNext)
+		{
+			PushBack(Temp->data);
+		}
+		other.head = nullptr;
+		other.tail = nullptr;
+		other.size = 0;
+	}
 	~List()
 	{
 		cout << "L_Destructor " << this << endl;
 	}
+	//Overloaded operators
+	List& operator=(const List& other)
+	{
+		this->head = nullptr;
+		this->tail = nullptr;
+		this->size = 0;
+		for (Element* Temp = other.head; Temp != nullptr; Temp = Temp->pNext)
+		{
+			PushBack(Temp->data);
+		}
+		return *this;
+	}
+	List& operator=(List&& other)
+	{
+		this->head = nullptr;
+		this->tail = nullptr;
+		this->size = 0;
+		for (Element* Temp = other.head; Temp != nullptr; Temp = Temp->pNext)
+		{
+			PushBack(Temp->data);
+		}
+		other.head = nullptr;
+		other.tail = nullptr;
+		other.size = 0;
+		return *this;
+	}
+	/*List& operator+=(List& other)
+	{
+		Element* Temp1 = this->head;
+		Element* Temp2 = other.tail;
+		for (int i = 0; i < this->size; i++)
+		{
+			Temp1 = Temp1->pNext;
+		}
+		for (int i = 0; i < other.size; i++)
+		{
+			Temp2 = Temp2->pPrev;
+		}
+		Temp1 = other.head;
+		Temp2 = this->tail;
+		return *this;
+	}*/
 	//Adding elements
 	void PushFront(int data)
 	{
@@ -63,6 +124,33 @@ public:
 			tail = New;
 		}
 	}
+	void Insert(int data, int index)
+	{
+		Element* New = new Element(data);
+		Element* Temp = head;
+		if (index > size) return;
+		if (index == 0) {
+			PushFront(data);
+			return;
+		}
+		size++;
+		for (int i = 0; i < index - 1; i++) 
+		{
+			Temp = Temp->pNext;
+		}
+		if (head == nullptr && tail == nullptr)
+		{
+			head = tail = New;
+		}
+		else
+		{
+			New->pNext = Temp->pNext;
+			New->pPrev = Temp;
+			Temp->pNext = New;
+			Temp = New;
+		}
+	}
+	//Subtracting elements
 	void PopFront()
 	{
 		Element* kill = head;
@@ -77,6 +165,17 @@ public:
 		tail = tail->pPrev;
 		tail->pNext = nullptr;
 		delete kill;
+		size--;
+	}
+	void Erase(int index)
+	{
+		Element* Temp = head;
+		if (index >= size) return;
+		for (int i = 0; i < index - 1; i++)
+		{
+			Temp = Temp->pNext;
+		}
+		Temp->pNext = Temp->pNext->pNext;
 		size--;
 	}
 	void print() const
@@ -94,8 +193,8 @@ public:
 		{
 			cout << Temp->pPrev << TAB << Temp << TAB << Temp->data << TAB << Temp->pNext << endl;
 		}
-		cout << endl;
 		cout << "List size: " << size << endl;
+		cout << endl;
 	}
 };
 
@@ -108,8 +207,11 @@ int main()
 	{
 		list.PushBack(rand() % 100);
 	}
-	list.print_reverse();
-	/*list.PopBack();
-	list.print_reverse();*/
+	list.print();
+	list.Erase(5);
+	list.print();
+	List list2;
+	list2 = list;
+	list2.print();
 	return 0;
 }
