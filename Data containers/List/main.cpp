@@ -36,7 +36,7 @@ public:
 	}
 	List(const List& other) :List()
 	{
-		this->size = other.size;
+		/*this->size = other.size;*/
 		for (Element* Temp = other.head; Temp != nullptr; Temp = Temp->pNext)
 		{
 			PushBack(Temp->data);
@@ -55,14 +55,14 @@ public:
 	}
 	~List()
 	{
+		while (head) { PopFront(); }
 		cout << "L_Destructor " << this << endl;
 	}
 	//Overloaded operators
 	List& operator=(const List& other)
 	{
-		this->head = nullptr;
-		this->tail = nullptr;
-		this->size = 0;
+		if (this == &other)return *this;
+		this->~List();
 		for (Element* Temp = other.head; Temp != nullptr; Temp = Temp->pNext)
 		{
 			PushBack(Temp->data);
@@ -106,23 +106,23 @@ public:
 		{
 			head = tail = new Element(data);
 		}
-		head = head->pPrev = new Element(data, head);
+		else 
+		{
+			head = head->pPrev = new Element(data, head);
+		}
 		size++;
 	}
 	void PushBack(int data)
 	{
-		Element* New = new Element(data);
-		size++;
 		if (head == nullptr && tail == nullptr)
 		{
-			head = tail = New;
+			head = tail = new Element(data);
 		}
 		else
 		{
-			New->pPrev = tail;
-			tail->pNext = New;
-			tail = New;
+			tail = tail->pNext = new Element(data, nullptr, tail);
 		}
+		size++;
 	}
 	void Insert(int data, int index)
 	{
@@ -153,29 +153,63 @@ public:
 	//Subtracting elements
 	void PopFront()
 	{
-		Element* kill = head;
-		head = head->pNext;
-		head->pPrev = nullptr;
-		delete kill;
+		if (!head && !tail) return;
+		if (head == tail)
+		{
+			delete head;
+			head = tail = nullptr;
+		}
+		else 
+		{
+			head = head->pNext;
+			delete head->pPrev;
+			head->pPrev = nullptr;
+		}
 		size--;
-	}
+	}	
 	void PopBack()
 	{
-		Element* kill = tail;
-		tail = tail->pPrev;
-		tail->pNext = nullptr;
-		delete kill;
+		if (!head && !tail) return;
+		if (head == tail)
+		{
+			delete head;
+			head = tail = nullptr;
+		}
+		else
+		{
+			tail = tail->pPrev;
+			delete tail->pNext;
+			tail->pNext = nullptr;
+		}
 		size--;
 	}
 	void Erase(int index)
 	{
-		Element* Temp = head;
-		if (index >= size) return;
-		for (int i = 0; i < index - 1; i++)
+		Element* Temp;
+		if (index == 0)
 		{
-			Temp = Temp->pNext;
+			PopFront();
+			return;
+		} 
+		if (index == size - 1)
+		{
+			PopBack();
+			return;
 		}
-		Temp->pNext = Temp->pNext->pNext;
+		if (index > size || index < 0) return;
+		if (index < size / 2)
+		{
+			Temp = head;
+			for (int i = 0; i < index; i++) { Temp = Temp->pNext; }
+		}
+		else
+		{
+			Temp = tail;
+			for (int i = 0; i < size - index - 1; i++) { Temp = Temp->pPrev; }
+		}
+		Temp->pPrev->pNext = Temp->pNext;
+		Temp->pNext->pPrev = Temp->pPrev;
+		delete Temp;
 		size--;
 	}
 	void print() const
@@ -198,20 +232,25 @@ public:
 	}
 };
 
+//#define Fundamentals
+
 int main()
 {
 	List list;
 	int n;
 	cout << "List size: "; cin >> n;
+#ifdef Fundamentals
 	for (int i = 0; i < n; i++)
 	{
 		list.PushBack(rand() % 100);
 	}
 	list.print();
-	list.Erase(5);
+	list.Erase(-4);
 	list.print();
 	List list2;
 	list2 = list;
 	list2.print();
+#endif // Fu
+
 	return 0;
 }
