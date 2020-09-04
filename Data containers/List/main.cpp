@@ -23,11 +23,69 @@ class List
 			//cout << "E_Destructor " << this << endl;
 		}
 		friend class List;
+		friend class Iterator;
 	};
 	Element* head;
 	Element* tail;
 	int size;
 public:
+	class Iterator
+	{
+		Element* Temp;
+	public:
+		Iterator(Element* Temp = nullptr) :Temp(Temp)
+		{
+			cout << "it_Constructor " << this << endl;
+		}
+		~Iterator()
+		{
+			cout << "it_Destructor " << this << endl;
+		}
+		Iterator operator++()
+		{
+			Temp = Temp->pNext;
+			return *this;
+		}
+		Iterator& operator--()
+		{
+			Temp = Temp->pPrev;
+			return *this;
+		}
+		Iterator operator++(int)
+		{
+			Iterator old = *this;
+			Temp = Temp->pNext;
+			return old;
+		}
+		Iterator operator--(int)
+		{
+			Iterator old = *this;
+			Temp = Temp->pPrev;
+			return old;
+		}
+		const int& operator*() const
+		{
+			return Temp->data;
+		}
+		bool operator!=(const Iterator& other) const
+		{
+			return this->Temp != other.Temp;
+		}
+		operator bool() const
+		{
+			return Temp;
+		}
+	};
+
+	const Iterator begin() const
+	{
+		return head;
+	}
+	const Iterator end() const
+	{
+		return nullptr;
+	}
+
 	List()
 	{
 		head = tail = nullptr;
@@ -53,9 +111,17 @@ public:
 		other.tail = nullptr;
 		other.size = 0;
 	}
+	List(const std::initializer_list<int>& li):List()
+	{
+		for (const int* it = li.begin(); it != li.end(); it++)
+		{
+			PushBack(*it);
+		}
+		cout << "IL_Constructor " << this << endl;
+	}
 	~List()
 	{
-		while (head) { PopFront(); }
+		while (tail) { PopBack(); }
 		cout << "L_Destructor " << this << endl;
 	}
 	//Overloaded operators
@@ -71,9 +137,8 @@ public:
 	}
 	List& operator=(List&& other)
 	{
-		this->head = nullptr;
-		this->tail = nullptr;
-		this->size = 0;
+		if (this == &other)return *this;
+		this->~List();
 		for (Element* Temp = other.head; Temp != nullptr; Temp = Temp->pNext)
 		{
 			PushBack(Temp->data);
@@ -83,22 +148,24 @@ public:
 		other.size = 0;
 		return *this;
 	}
-	/*List& operator+=(List& other)
+	/*List& operator+=(const List& other)
 	{
-		Element* Temp1 = this->head;
-		Element* Temp2 = other.tail;
-		for (int i = 0; i < this->size; i++)
+		Element* Temp = this->head;
+		while(Temp->pNext)
 		{
-			Temp1 = Temp1->pNext;
+			Temp = Temp->pNext;
 		}
-		for (int i = 0; i < other.size; i++)
+		Temp = other.head;
+		Element* Ming = other.tail;
+		while (Ming->pPrev)
 		{
-			Temp2 = Temp2->pPrev;
+			Ming = Ming->pPrev;
 		}
-		Temp1 = other.head;
-		Temp2 = this->tail;
+		Ming = this->tail;
+		this->size += other.size;
 		return *this;
 	}*/
+	
 	//Adding elements
 	void PushFront(int data)
 	{
@@ -127,7 +194,7 @@ public:
 	void Insert(int data, int index)
 	{
 		Element* New = new Element(data);
-		Element* Temp = head;
+		Element* Temp;
 		if (index > size) return;
 		if (index == 0) {
 			PushFront(data);
@@ -212,20 +279,20 @@ public:
 		delete Temp;
 		size--;
 	}
-	void print() const
+	void print() const	
 	{
-		for (Element* Temp = head; Temp; Temp = Temp->pNext)
+		for (Iterator it = head; it; it++)
 		{
-			cout << Temp->pPrev << TAB << Temp << TAB << Temp->data << TAB << Temp->pNext << endl;
+			cout << *it << "  ";
 		}
 		cout << "List size: " << size << endl;
 		cout << endl;
 	}
 	void print_reverse() const
 	{
-		for (Element* Temp = tail; Temp; Temp = Temp->pPrev)
+		for (Iterator it = tail; it; it--)
 		{
-			cout << Temp->pPrev << TAB << Temp << TAB << Temp->data << TAB << Temp->pNext << endl;
+			cout << *it << "  ";
 		}
 		cout << "List size: " << size << endl;
 		cout << endl;
@@ -233,24 +300,34 @@ public:
 };
 
 //#define Fundamentals
+//#define MAIN
 
 int main()
 {
+#ifdef MAIN
 	List list;
 	int n;
 	cout << "List size: "; cin >> n;
-#ifdef Fundamentals
 	for (int i = 0; i < n; i++)
 	{
 		list.PushBack(rand() % 100);
 	}
 	list.print();
+#endif // MAIN
+
+#ifdef Fundamentals
 	list.Erase(-4);
 	list.print();
 	List list2;
 	list2 = list;
 	list2.print();
-#endif // Fu
+#endif // Fundamentals
+	
+	List leest = { 3,5,8,13,21 };
+	for (int i : leest)
+	{
+		cout << i << "  ";
+	}
 
 	return 0;
 }
