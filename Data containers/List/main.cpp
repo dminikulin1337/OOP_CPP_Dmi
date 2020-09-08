@@ -24,6 +24,7 @@ class List
 		}
 		friend class List;
 		friend class Iterator;
+		friend class ReverseIterator;
 	};
 	Element* head;
 	Element* tail;
@@ -35,11 +36,11 @@ public:
 	public:
 		Iterator(Element* Temp = nullptr) :Temp(Temp)
 		{
-			cout << "it_Constructor " << this << endl;
+			//cout << "it_Constructor " << this << endl;
 		}
 		~Iterator()
 		{
-			cout << "it_Destructor " << this << endl;
+			//cout << "it_Destructor " << this << endl;
 		}
 		Iterator operator++()
 		{
@@ -86,6 +87,75 @@ public:
 		return nullptr;
 	}
 
+	class ReverseIterator
+	{
+		Element* Temp;
+	public:
+		ReverseIterator(Element* Temp = nullptr): Temp(Temp)
+		{
+			cout << "revit_Constructor " << this << endl;
+		}
+		~ReverseIterator()
+		{
+			cout << "revit_Destructor " << this << endl;
+		}
+		ReverseIterator& operator++()
+		{
+			Temp = Temp->pPrev;
+			return *this;
+		}
+		ReverseIterator& operator--()
+		{
+			Temp = Temp->pNext;
+			return *this;
+		}
+		/*ReversedIterator operator++(int)
+		{
+			ReversedIterator old = *this;
+			Temp = Temp->pPrev;
+			return old;
+		}
+		ReversedIterator operator--(int)
+		{
+			ReversedIterator old = *this;
+			Temp = Temp->pNext;
+			return old;
+		}*/
+		const int& operator*() const
+		{
+			return Temp->data;
+		}
+		int& operator*()
+		{
+			return Temp->data;
+		}
+		bool operator!=(const ReverseIterator& other) const
+		{
+			return this->Temp != other.Temp;
+		}
+		operator bool() const
+		{
+			return this->Temp;
+		}
+	};
+
+	const ReverseIterator rbegin() const
+	{
+		return tail;
+	}
+	ReverseIterator rbegin()
+	{
+		return tail;
+	}
+	const ReverseIterator rend() const
+	{
+		return nullptr;
+	}
+	ReverseIterator rend()
+	{
+		return nullptr;
+	}
+
 	List()
 	{
 		head = tail = nullptr;
@@ -121,7 +191,7 @@ public:
 	}
 	~List()
 	{
-		while (tail) { PopBack(); }
+		while (head) { PopFront(); }
 		cout << "L_Destructor " << this << endl;
 	}
 	//Overloaded operators
@@ -290,7 +360,7 @@ public:
 	}
 	void print_reverse() const
 	{
-		for (Iterator it = tail; it; it--)
+		for (ReverseIterator it = rbegin(); it != rend(); ++it)
 		{
 			cout << *it << "  ";
 		}
@@ -328,6 +398,11 @@ int main()
 	{
 		cout << i << "  ";
 	}
+	leest.print_reverse();
 
+	for (List::ReverseIterator rit = leest.rbegin(); rit != leest.rend(); ++rit)
+	{
+		cout << *rit << "\t";
+	}
 	return 0;
 }
