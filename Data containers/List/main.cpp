@@ -1,5 +1,5 @@
-#include"Functions.h"
-#include"Functions.cpp"
+#include"List.h"
+#include"List.cpp"
 
 //#define Fundamentals
 //#define MAIN
