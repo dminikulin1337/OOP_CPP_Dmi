@@ -1,17 +1,19 @@
 #include<iostream>
+#include<string>
 using namespace std;
 
 #define TAB "\t"
 
+template<typename T>
 class List
 {
 	class Element
 	{
-		int data;
+		T data;
 		Element* pNext;
 		Element* pPrev;
 	public:
-		Element(int data, Element* pNext = nullptr, Element* pPrev = nullptr):
+		Element(T data, Element* pNext = nullptr, Element* pPrev = nullptr):
 			data(data),
 			pNext(pNext),
 			pPrev(pPrev)
@@ -64,7 +66,7 @@ public:
 			Temp = Temp->pPrev;
 			return old;
 		}
-		const int& operator*() const
+		const T& operator*() const
 		{
 			return Temp->data;
 		}
@@ -121,11 +123,11 @@ public:
 			Temp = Temp->pNext;
 			return old;
 		}*/
-		const int& operator*() const
+		const T& operator*() const
 		{
 			return Temp->data;
 		}
-		int& operator*()
+		T& operator*()
 		{
 			return Temp->data;
 		}
@@ -181,9 +183,9 @@ public:
 		other.tail = nullptr;
 		other.size = 0;
 	}
-	List(const std::initializer_list<int>& li):List()
+	List(const std::initializer_list<T>& li):List()
 	{
-		for (const int* it = li.begin(); it != li.end(); it++)
+		for (const T* it = li.begin(); it != li.end(); it++)
 		{
 			PushBack(*it);
 		}
@@ -237,7 +239,7 @@ public:
 	}*/
 	
 	//Adding elements
-	void PushFront(int data)
+	void PushFront(T data)
 	{
 		if (head == nullptr && tail == nullptr)
 		{
@@ -249,7 +251,7 @@ public:
 		}
 		size++;
 	}
-	void PushBack(int data)
+	void PushBack(T data)
 	{
 		if (head == nullptr && tail == nullptr)
 		{
@@ -261,7 +263,7 @@ public:
 		}
 		size++;
 	}
-	void Insert(int data, int index)
+	void Insert(T data, int index)
 	{
 		Element* New = new Element(data);
 		Element* Temp;
@@ -371,9 +373,11 @@ public:
 
 //#define Fundamentals
 //#define MAIN
+//#define Iterators
 
 int main()
 {
+	setlocale(LC_ALL, "");
 #ifdef MAIN
 	List list;
 	int n;
@@ -393,6 +397,7 @@ int main()
 	list2.print();
 #endif // Fundamentals
 	
+#ifdef Iterators
 	List leest = { 3,5,8,13,21 };
 	for (int i : leest)
 	{
@@ -403,6 +408,38 @@ int main()
 	for (List::ReverseIterator rit = leest.rbegin(); rit != leest.rend(); ++rit)
 	{
 		cout << *rit << "\t";
+	}
+#endif // Iterators
+
+	List<int> list1 = { 3,5,8,13,21 };
+	for (List<int>::Iterator it = list1.begin(); it != list1.end(); it++)
+	{
+		cout << *it << "\t";
+	}
+	cout << endl;
+	for (List<int>::ReverseIterator it = list1.rbegin(); it != list1.rend(); ++it)
+	{
+		cout << *it << "\t";
+	}
+	cout << endl;
+	///////////////////////////////////////////////////////////////////////////////
+	List<double> list2 = { 2.5, 3.14, 8.2, 12.21 };
+	for (double i : list2)
+	{
+		cout << i << "\t";
+	}
+	cout << endl;
+	///////////////////////////////////////////////////////////////////////////////
+	List<std::string> list3 = {"Хорошо", "живет", "на", "свете", "Винни-Пух"};
+	list3.PushFront("Друзья!");
+	list3.PushBack("Запомните!!!");
+	for (std::string i : list3)
+	{
+		cout << i << "\t";
+	}
+	for (List<std::string>::ReverseIterator it = list3.rbegin(); it != list3.rend(); ++it)
+	{
+		cout << *it << endl;
 	}
 	return 0;
 }
