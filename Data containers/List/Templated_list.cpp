@@ -1,6 +1,115 @@
 #include"Templated_list.h"
 
 template<typename T>
+List<T>::Element::Element(T data, Element* pNext, Element* pPrev) :
+	data(data),
+	pNext(pNext),
+	pPrev(pPrev)
+{
+	//cout << "E_Constructor " << this << endl;
+};
+template<typename T>
+List<T>::Element::~Element()
+{
+	//cout << "E_Destructor " << this << endl;
+}
+
+template<typename T>
+List<T>::Iterator::Iterator(Element* Temp) :Temp(Temp)
+{
+	//cout << "it_Constructor " << this << endl;
+}
+template<typename T>
+List<T>::Iterator::~Iterator()
+{
+	//cout << "it_Destructor " << this << endl;
+}
+template<typename T>
+typename List<T>::Iterator& List<T>::Iterator::operator++()
+{
+	Temp = Temp->pNext;
+	return *this;
+}
+template<typename T>
+typename List<T>::Iterator& List<T>::Iterator::operator--()
+{
+	Temp = Temp->pPrev;
+	return *this;
+}
+template<typename T>
+typename List<T>::Iterator List<T>::Iterator::operator++(int)
+{
+	Iterator old = *this;
+	Temp = Temp->pNext;
+	return old;
+}
+template<typename T>
+typename List<T>::Iterator List<T>::Iterator::operator--(int)
+{
+	Iterator old = *this;
+	Temp = Temp->pPrev;
+	return old;
+}
+template<typename T>
+const T& List<T>::Iterator::operator*() const
+{
+	return Temp->data;
+}
+template<typename T>
+bool List<T>::Iterator::operator!=(const Iterator& other) const
+{
+	return this->Temp != other.Temp;
+}
+template<typename T>
+List<T>::Iterator::operator bool() const
+{
+	return Temp;
+}
+
+template<typename T>
+List<T>::ReverseIterator::ReverseIterator(Element* Temp) : Temp(Temp)
+{
+	//cout << "revit_Constructor " << this << endl;
+}
+template<typename T>
+List<T>::ReverseIterator::~ReverseIterator()
+{
+	//cout << "revit_Destructor " << this << endl;
+}
+template<typename T>
+typename List<T>::ReverseIterator& List<T>::ReverseIterator::operator++()
+{
+	Temp = Temp->pPrev;
+	return *this;
+}
+template<typename T>
+typename List<T>::ReverseIterator& List<T>::ReverseIterator::operator--()
+{
+	Temp = Temp->pNext;
+	return *this;
+}
+template<typename T>
+const T& List<T>::ReverseIterator::operator*() const
+{
+	return Temp->data;
+}
+template<typename T>
+T& List<T>::ReverseIterator::operator*()
+{
+	return Temp->data;
+}
+template<typename T>
+bool List<T>::ReverseIterator::operator!=(const ReverseIterator& other) const
+{
+	return this->Temp != other.Temp;
+}
+template<typename T>
+List<T>::ReverseIterator::operator bool() const
+{
+	return this->Temp;
+}
+
+template<typename T>
 typename const List<T>::Iterator List<T>::begin() const
 {
 	return head;

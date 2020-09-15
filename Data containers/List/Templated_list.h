@@ -13,10 +13,7 @@ class List
 		Element* pPrev;
 	public:
 		Element(T data, Element* pNext = nullptr, Element* pPrev = nullptr);
-		~Element()
-		{
-			//cout << "E_Destructor " << this << endl;
-		}
+		~Element();
 		friend class List;
 		friend class Iterator;
 		friend class ReverseIterator;
@@ -29,48 +26,15 @@ public:
 	{
 		Element* Temp;
 	public:
-		Iterator(Element* Temp = nullptr) :Temp(Temp)
-		{
-			//cout << "it_Constructor " << this << endl;
-		}
-		~Iterator()
-		{
-			//cout << "it_Destructor " << this << endl;
-		}
-		Iterator operator++()
-		{
-			Temp = Temp->pNext;
-			return *this;
-		}
-		Iterator& operator--()
-		{
-			Temp = Temp->pPrev;
-			return *this;
-		}
-		Iterator operator++(int)
-		{
-			Iterator old = *this;
-			Temp = Temp->pNext;
-			return old;
-		}
-		Iterator operator--(int)
-		{
-			Iterator old = *this;
-			Temp = Temp->pPrev;
-			return old;
-		}
-		const T& operator*() const
-		{
-			return Temp->data;
-		}
-		bool operator!=(const Iterator& other) const
-		{
-			return this->Temp != other.Temp;
-		}
-		operator bool() const
-		{
-			return Temp;
-		}
+		Iterator(Element* Temp = nullptr);
+		~Iterator();
+		Iterator& operator++();
+		Iterator& operator--();
+		Iterator operator++(int);
+		Iterator operator--(int);
+		const T& operator*() const;
+		bool operator!=(const Iterator& other) const;
+		operator bool() const;
 	};
 
 	const Iterator begin() const;
@@ -80,52 +44,14 @@ public:
 	{
 		Element* Temp;
 	public:
-		ReverseIterator(Element* Temp = nullptr) : Temp(Temp)
-		{
-			cout << "revit_Constructor " << this << endl;
-		}
-		~ReverseIterator()
-		{
-			cout << "revit_Destructor " << this << endl;
-		}
-		ReverseIterator& operator++()
-		{
-			Temp = Temp->pPrev;
-			return *this;
-		}
-		ReverseIterator& operator--()
-		{
-			Temp = Temp->pNext;
-			return *this;
-		}
-		/*ReversedIterator operator++(int)
-		{
-			ReversedIterator old = *this;
-			Temp = Temp->pPrev;
-			return old;
-		}
-		ReversedIterator operator--(int)
-		{
-			ReversedIterator old = *this;
-			Temp = Temp->pNext;
-			return old;
-		}*/
-		const T& operator*() const
-		{
-			return Temp->data;
-		}
-		T& operator*()
-		{
-			return Temp->data;
-		}
-		bool operator!=(const ReverseIterator& other) const
-		{
-			return this->Temp != other.Temp;
-		}
-		operator bool() const
-		{
-			return this->Temp;
-		}
+		ReverseIterator(Element* Temp = nullptr);
+		~ReverseIterator();
+		ReverseIterator& operator++();
+		ReverseIterator& operator--();
+		const T& operator*() const;
+		T& operator*();
+		bool operator!=(const ReverseIterator& other) const;
+		operator bool() const;
 	};
 
 	const ReverseIterator rbegin() const;
@@ -153,3 +79,4 @@ public:
 	void print() const;
 	void print_reverse() const;
 };
+
