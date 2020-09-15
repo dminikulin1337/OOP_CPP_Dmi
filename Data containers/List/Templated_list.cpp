@@ -30,7 +30,6 @@ typename List<T>::ReverseIterator List<T>::rend()
 {
 	return nullptr;
 }
-
 template<typename T>
 List<T>::List()
 {

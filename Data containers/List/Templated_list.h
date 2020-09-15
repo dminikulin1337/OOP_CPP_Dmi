@@ -12,13 +12,7 @@ class List
 		Element* pNext;
 		Element* pPrev;
 	public:
-		Element(T data, Element* pNext = nullptr, Element* pPrev = nullptr) :
-			data(data),
-			pNext(pNext),
-			pPrev(pPrev)
-		{
-			//cout << "E_Constructor " << this << endl;
-		}
+		Element(T data, Element* pNext = nullptr, Element* pPrev = nullptr);
 		~Element()
 		{
 			//cout << "E_Destructor " << this << endl;
@@ -147,23 +141,6 @@ public:
 	//Overloaded operators
 	List& operator=(const List& other);
 	List& operator=(List&& other);
-	/*List& operator+=(const List& other)
-	{
-		Element* Temp = this->head;
-		while(Temp->pNext)
-		{
-			Temp = Temp->pNext;
-		}
-		Temp = other.head;
-		Element* Ming = other.tail;
-		while (Ming->pPrev)
-		{
-			Ming = Ming->pPrev;
-		}
-		Ming = this->tail;
-		this->size += other.size;
-		return *this;
-	}*/
 
 	//Adding elements
 	void PushFront(T data);
