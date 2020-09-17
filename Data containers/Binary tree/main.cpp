@@ -35,7 +35,33 @@ public:
 	{
 		cout << "TDestructor:\t" << this << endl;
 	}
-
+	void insert(int Data)
+	{
+		insert(Data, this->Root);
+	}
+	int minValue()
+	{
+		if (!this->Root)throw std::exception("Tree is empty");
+		return minValue(this->Root);
+	}
+	int maxValue()
+	{
+		return maxValue(Root);
+	}
+	int count()
+	{
+		return count(Root);
+	}
+	int sum()
+	{
+		return sum(Root);
+	}
+	void print()
+	{
+		print(this->Root);
+		cout << endl;
+	}
+private:
 	void insert(int Data, Element* Root)
 	{
 		if (this->Root == nullptr)
@@ -62,6 +88,32 @@ public:
 		}
 	}
 
+	int minValue(Element* Root)
+	{
+		if (Root == nullptr) return int();
+		if (Root->pLeft == nullptr) return Root->Data;
+		return minValue(Root->pLeft);
+	}
+
+	int maxValue(Element* Root)
+	{
+		return Root == nullptr ? int() : Root->pRight ? maxValue(Root->pRight) : Root->Data;
+	}
+
+	int count(Element* Root)
+	{
+		if (Root == nullptr) return 0;
+		if (Root->pLeft == Root->pRight) return 1;
+		return 1 + count(Root->pLeft) + count(Root->pRight);
+	}
+
+	int sum(Element* Root)
+	{
+		if (Root == nullptr) return 0;
+		if (Root->pLeft == Root->pRight) return Root->Data;
+		return Root->Data + sum(Root->pLeft) + sum(Root->pRight);
+	}
+
 	void print(Element* Root)
 	{
 		if (Root == nullptr)return;
@@ -71,7 +123,7 @@ public:
 	}
 };
 
-int main()
+int main() 
 {
 	setlocale(LC_ALL, "");
 	int n;
@@ -79,8 +131,12 @@ int main()
 	Tree T800;
 	for (int i = 0; i < n; i++)
 	{
-		T800.insert(rand() % 100, T800.getRoot());
+		T800.insert(rand() % 100);
 	}
-	T800.print(T800.getRoot());
+	T800.print();
+	cout << "MIN: " << T800.minValue() << endl;
+	cout << "MAX: " << T800.maxValue() << endl;
+	cout << "How much: " << T800.count() << endl;
+	cout << "SUM of all elements: " << T800.sum() << endl;
 	return 0;
 }
