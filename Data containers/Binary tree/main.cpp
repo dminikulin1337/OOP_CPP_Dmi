@@ -31,6 +31,13 @@ public:
 		Root = nullptr;
 		cout << "TConstructor:\t" << this << endl;
 	}
+	Tree(const initializer_list<int>& il) :Tree()
+	{
+		for (const int* it = il.begin(); it != il.end(); it++)
+		{
+			insert(*it);
+		}
+	}
 	~Tree()
 	{
 		cout << "TDestructor:\t" << this << endl;
@@ -38,6 +45,11 @@ public:
 	void insert(int Data)
 	{
 		insert(Data, this->Root);
+	}
+	void erase(int Data)
+	{
+		erase(Data, this->Root);
+		erase(Data, this->Root);
 	}
 	int minValue()
 	{
@@ -114,6 +126,36 @@ private:
 		return Root->Data + sum(Root->pLeft) + sum(Root->pRight);
 	}
 
+	void erase(int Data, Element* &Root)
+	{
+		if (Root == nullptr) return;
+		if (Data == Root->Data) 
+		{
+			if (Root->pLeft == Root->pRight)
+			{
+				delete Root;
+				Root = nullptr;
+				return;
+			}
+			else
+			{
+				if (Root->pLeft)
+				{
+					Root->Data = maxValue(Root->pLeft);
+					erase(maxValue(Root->pLeft), Root->pLeft);
+				}
+				else if (Root->pRight)
+				{
+					Root->Data = minValue(Root->pRight);
+					erase(minValue(Root->pRight), Root->pRight);
+				}
+				//if (Root->Data == Data) erase(Data, Root);
+			}
+		}
+		erase(Data, Root->pLeft);
+		erase(Data, Root->pRight);
+	}
+	
 	void print(Element* Root)
 	{
 		if (Root == nullptr)return;
@@ -123,9 +165,13 @@ private:
 	}
 };
 
+#define BaseCheck
+//#define ideal
+
 int main() 
 {
 	setlocale(LC_ALL, "");
+#ifdef BaseCheck
 	int n;
 	cout << "Type tree size: "; cin >> n;
 	Tree T800;
@@ -138,5 +184,18 @@ int main()
 	cout << "MAX: " << T800.maxValue() << endl;
 	cout << "How much: " << T800.count() << endl;
 	cout << "SUM of all elements: " << T800.sum() << endl;
+	int value;
+	cout << "Type value you wanna delete: "; cin >> value;
+	T800.erase(value);
+	T800.print();
+#endif // BaseCheck
+
+#ifdef ideal
+	Tree tree = { 50,25,20,35,75,45,80 };
+	tree.print();
+	tree.erase(75);
+	tree.print();
+#endif // ideal
+
 	return 0;
 }
